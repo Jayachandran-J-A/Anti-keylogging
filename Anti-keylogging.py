@@ -1,6 +1,10 @@
 import os
 import re
-from tqdm import tqdm  # Import tqdm for the progress bar
+import tkinter as tk
+from tkinter import filedialog
+from tqdm import tqdm
+import tkinter.ttk as ttk
+
 
 def scan_files(root_folder):
     scanned_files = []
@@ -35,12 +39,27 @@ def detect_and_remove_keylogger(file_path):
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
 
-if __name__ == "__main__":
-    # Adjust the root_folder to the desired starting point for the file search
-    root_folder = r"C:\Users\jayac\Anti-Keylog-Test"  
+def start_scan():
+    root_folder = filedialog.askdirectory()
+    if root_folder:
+        all_files = scan_files(root_folder)
+        progress_bar['maximum'] = len(all_files)
+        
+        for file_path in tqdm(all_files, desc="Scanning Files", unit="file"):
+            detect_and_remove_keylogger(file_path)
+            progress_bar['value'] += 1
+            root.update_idletasks()
 
-    all_files = scan_files(root_folder)
+root = tk.Tk()
+root.title("Anti-Keylogger App")
 
-    # Integrate tqdm for a progress bar
-    for file_path in tqdm(all_files, desc="Scanning Files", unit="file"):
-        detect_and_remove_keylogger(file_path)
+start_button = tk.Button(root, text="Start Scan", command=start_scan)
+start_button.pack(pady=10)
+
+progress_bar = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
+progress_bar.pack(pady=10)
+
+log_area = tk.Text(root, height=10, width=50)
+log_area.pack(pady=10)
+
+root.mainloop()
